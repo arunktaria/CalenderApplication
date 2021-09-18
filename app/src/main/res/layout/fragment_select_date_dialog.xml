@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350sp"
+    android:layout_height="350sp"
+    android:orientation="vertical"
+    android:padding="16sp"
+    android:background="@drawable/roundcorner"
+    android:gravity="center_vertical"
+    tools:context=".SelectDateDialog">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10sp"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/eventnameedittxt"
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:layout_marginBottom="10sp"
+        android:background="@drawable/editxtbackground"
+        android:elevation="5sp"
+        android:hint="Event name"
+        android:padding="16sp"
+
+        />
+
+
+    <EditText
+        android:id="@+id/eventdes"
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:layout_marginTop="16sp"
+        android:layout_marginBottom="10sp"
+        android:background="@drawable/editxtbackground"
+        android:elevation="5sp"
+        android:hint="Event name"
+        android:padding="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:id="@+id/btnsubmit"
+        android:text="submit"
+        android:layout_marginTop="16sp"
+        android:layout_marginBottom="10sp"
+        android:elevation="5sp"
+        android:textColor="@color/white"
+        android:background="@drawable/btnbckground"
+        />
+
+</LinearLayout>
+</LinearLayout>
