@@ -21,4 +21,7 @@ public interface DaoInterface {
     @Delete
     void deleteItem(CalenderData calenderData);
 
+    @Query("delete from calender_tbl")
+    public void deleteallentry();
+
 }

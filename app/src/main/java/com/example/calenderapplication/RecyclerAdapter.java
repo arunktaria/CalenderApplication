@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,16 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolderClss> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolderClss> implements Filterable {
 List<CalenderData> list;
 CalenderData calenderData;
 Context context;
 DaoInterface database;
+List<CalenderData> listtemp;
     public RecyclerAdapter(List<CalenderData> list, Context context) {
         this.context=context;
         this.list = list;
+        this.listtemp=list;
         database=RoomDataBase.instance.getDao();
     }
 
@@ -47,6 +54,43 @@ DaoInterface database;
     public int getItemCount() {
         return list.size();
     }
+
+
+
+    @Override
+    public Filter getFilter() {
+    return filter;
+    }
+
+    Filter filter =new Filter() {
+
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<CalenderData> templist=new ArrayList<>();
+           if (constraint.toString().trim().isEmpty())
+           {
+               templist.addAll(list);
+           }
+           else{
+               for (CalenderData ob : list)
+               {
+                   if (ob.getEventName().toString().toLowerCase().trim().contains(constraint.toString().trim().toLowerCase()))
+                templist.add(ob);
+               }
+           }
+           FilterResults filterResults=new FilterResults();
+           filterResults.values=templist;
+            return filterResults;
+        }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+        list.clear();
+        list.addAll((List) results.values);
+        notifyDataSetChanged();
+        }
+    };
+
     public class ViewHolderClss extends RecyclerView.ViewHolder {
      TextView title;
      TextView des;

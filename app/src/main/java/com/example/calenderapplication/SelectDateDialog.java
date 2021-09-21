@@ -18,17 +18,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class SelectDateDialog extends Dialog {
-    EditText eventname,eventdes;
+    EditText eventname, eventdes;
     Button submitbtn;
     CalenderData data;
     Context context;
     String fulldate;
     DaoInterface database;
-    public SelectDateDialog(@NonNull Context context,String fulldate) {
+
+    public SelectDateDialog(@NonNull Context context, String fulldate) {
         super(context);
-        this.context=context;
-    this.fulldate=fulldate;
-    database=RoomDataBase.instance.getDao();
+        this.context = context;
+        this.fulldate = fulldate;
+        database = RoomDataBase.instance.getDao();
     }
 
 
@@ -36,9 +37,9 @@ public class SelectDateDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_select_date_dialog);
-        eventdes=findViewById(R.id.eventdes);
-        eventname=findViewById(R.id.eventnameedittxt);
-        submitbtn=findViewById(R.id.btnsubmit);
+        eventdes = findViewById(R.id.eventdes);
+        eventname = findViewById(R.id.eventnameedittxt);
+        submitbtn = findViewById(R.id.btnsubmit);
 
         submitbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,17 +47,17 @@ public class SelectDateDialog extends Dialog {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                      data=new CalenderData();
-                      data.setDate(fulldate);
-                      data.setEventName(eventname.getText().toString());
-                      data.setDes(eventdes.getText().toString());
-                      database.setData(data);
-                      new Handler(Looper.getMainLooper()).post(new Runnable() {
-                          @Override
-                          public void run() {
-                              Toast.makeText(context, "Inserted!", Toast.LENGTH_SHORT).show();
-                          }
-                      });
+                        data = new CalenderData();
+                        data.setDate(fulldate);
+                        data.setEventName(eventname.getText().toString());
+                        data.setDes(eventdes.getText().toString());
+                        database.setData(data);
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "Inserted!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }).start();
             }
