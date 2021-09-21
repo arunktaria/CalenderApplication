@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     RecyclerView recyclerView;
     List<CalenderData> list;
-    String fulldate;
+    String fulldate="";
     ViewModelclss viewmodel;
     LinearLayout linearLayout;
 
@@ -80,9 +80,16 @@ public class MainActivity extends AppCompatActivity {
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectDateDialog dateDialog = new SelectDateDialog(MainActivity.this, fulldate);
-                dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dateDialog.show();
+               if(fulldate.isEmpty())
+               {
+                   Toast.makeText(MainActivity.this, "select date first...", Toast.LENGTH_SHORT).show();
+               }
+               else {
+
+                   SelectDateDialog dateDialog = new SelectDateDialog(MainActivity.this, fulldate);
+                   dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                   dateDialog.show();
+               }
             }
         });
 

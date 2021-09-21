@@ -37,13 +37,13 @@
     android:layout_marginBottom="10sp"
     android:elevation="4sp"/>
         <ImageButton
-            android:layout_width="25sp"
-            android:layout_height="25sp"
+            android:layout_width="28sp"
+            android:layout_height="28sp"
             android:id="@+id/addeventbtn"
-            android:visibility="gone"
+
             android:layout_marginBottom="10sp"
             android:layout_gravity="end"
-            android:background="@drawable/editimg"
+          android:background="@drawable/addimg"
             />
     </LinearLayout>
     <LinearLayout
