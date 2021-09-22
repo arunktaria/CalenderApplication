@@ -15,8 +15,11 @@ public interface DaoInterface {
     @Insert
     void setData(CalenderData data);
 
-    @Query("select * from Calender_tbl")
+    @Query("select * from Calender_tbl order by id DESC")
     LiveData<List<CalenderData>> getData();
+
+    @Query("select * from Calender_tbl")
+    List<CalenderData> getDataList();
 
     @Delete
     void deleteItem(CalenderData calenderData);

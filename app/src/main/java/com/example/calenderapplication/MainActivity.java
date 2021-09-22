@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -42,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
     RecyclerAdapter adapter;
     SearchView searchView;
     RecyclerView recyclerView;
-    List<CalenderData> list;
-    String fulldate="";
+    List<CalenderData> list, list2;
+    String fulldate = "";
     ViewModelclss viewmodel;
     LinearLayout linearLayout;
+    TextView showalleventstxtv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,45 +57,48 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchitem);
         btnedit = findViewById(R.id.addeventbtn);
         database = RoomDataBase.getInstance(this).getDao();
-
+        showalleventstxtv = findViewById(R.id.showallevents);
         linearLayout = findViewById(R.id.linearmain);
         Snackbar.make(linearLayout, "long press to delete item", BaseTransientBottomBar.LENGTH_LONG).show();
+
+        viewmodel = ViewModelProviders.of(this).get(ViewModelclss.class);
 
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         list = new ArrayList<>();
-
+        list2 = new ArrayList<>();
 
         getSupportActionBar().setSubtitle("Calender App");
 
-        //viewmodel and livedata for getting live results.
-        viewmodel = ViewModelProviders.of(this).get(ViewModelclss.class);
-        viewmodel.getData().observe(this, new Observer<List<CalenderData>>() {
-            @Override
-            public void onChanged(List<CalenderData> calenderData) {
-                adapter = new RecyclerAdapter(calenderData, MainActivity.this);
-                recyclerView.setAdapter(adapter);
-            }
-        });
-
+        setDateLists("");
         //for inserting new events using dialog
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(fulldate.isEmpty())
-               {
-                   Toast.makeText(MainActivity.this, "select date first...", Toast.LENGTH_SHORT).show();
-               }
-               else {
+                if (fulldate.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "select date first...", Toast.LENGTH_SHORT).show();
+                } else {
 
-                   SelectDateDialog dateDialog = new SelectDateDialog(MainActivity.this, fulldate);
-                   dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                   dateDialog.show();
-               }
+                    SelectDateDialog dateDialog = new SelectDateDialog(MainActivity.this, fulldate);
+                    dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dateDialog.show();
+                }
             }
         });
 
-
+        showalleventstxtv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewmodel.getData().observe(MainActivity.this, new Observer<List<CalenderData>>() {
+                    @Override
+                    public void onChanged(List<CalenderData> calenderData) {
+                        list=calenderData;
+                        adapter = new RecyclerAdapter(list, MainActivity.this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        });
 
 
         //getting calender date
@@ -101,14 +106,56 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year1, int month1, int dayOfMonth) {
 
-                btnedit.setVisibility(View.VISIBLE);
+
                 fulldate = String.valueOf(dayOfMonth + "-" + (month1 + 1) + "-" + year1);
+                String date = "";
+                list.clear();
+                date = String.valueOf(dayOfMonth + "-" + (month1 + 1) + "-" + year1);
+                setDateLists(date);
 
             }
         });
 
 
     }
+
+    public void setDateLists(String date) {
+        //viewmodel and livedata for getting live results.
+        list.clear();
+
+        viewmodel.getData().observe(this, new Observer<List<CalenderData>>() {
+            @Override
+            public void onChanged(List<CalenderData> calenderData) {
+
+                if (!date.equals("")) {
+                    for (int i = 0; i < calenderData.size(); i++) {
+                        CalenderData data = calenderData.get(i);
+                        if (date.equals(data.getDate())) {
+                            list.add(data);
+                            adapter = new RecyclerAdapter(list, MainActivity.this);
+                            recyclerView.setAdapter(adapter);
+
+                            break;
+                        }
+                        else {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                } else
+
+                    list=calenderData;
+                    adapter = new RecyclerAdapter(list, MainActivity.this);
+                    recyclerView.setAdapter(adapter);
+
+
+            }
+        });
+
+
+    }
+
+
     //menu for clearing data and for search (searchview)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
+
                 return false;
             }
         });
@@ -164,10 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.searchitem:
 
-
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 }
