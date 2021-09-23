@@ -132,24 +132,20 @@ public class MainActivity extends AppCompatActivity {
                         CalenderData data = calenderData.get(i);
                         if (date.equals(data.getDate())) {
                             list.add(data);
-                            adapter = new RecyclerAdapter(list, MainActivity.this);
-                            recyclerView.setAdapter(adapter);
+                        }
 
-                            break;
-                        }
-                        else {
-                            list.clear();
-                            adapter.notifyDataSetChanged();
-                        }
+
                     }
-                } else
-
-                    list=calenderData;
+                } else {
+                    list = calenderData;
                     adapter = new RecyclerAdapter(list, MainActivity.this);
                     recyclerView.setAdapter(adapter);
-
+                }
+                adapter=new RecyclerAdapter(list,MainActivity.this);
+                recyclerView.setAdapter(adapter);
 
             }
+
         });
 
 
